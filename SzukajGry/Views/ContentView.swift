@@ -24,7 +24,7 @@ struct ContentView: View {
                     self.isShowingView = true
                 }
                 .padding()
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
                 
                 NavigationLink(destination: GamesListView(title: title), isActive: $isShowingView) { EmptyView() }
                 }

@@ -29,7 +29,9 @@ struct GamesListView: View {
           guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
               return Result.empty.games!
           }
+            print(data)
             let result = try JSONDecoder().decode([Game].self, from: data)
+            print(result)
             return result
         }
         catch {
@@ -42,8 +44,13 @@ struct GamesListView: View {
             if isSearching {
                 ProgressView("Fetching...")
             } else {
+                
                 List (games, id: \.dealID){ game in
-                    GameRow(game: game)
+                    NavigationLink{
+                        DetailsView(game: game)
+                    } label: {
+                        GameRow(game: game)
+                    }
                 }
             }
         }
@@ -61,6 +68,7 @@ struct GamesListView: View {
         .refreshable {
             
         }
+        .navigationTitle("Wyniki wyszukiwania")
     }
         
 }
