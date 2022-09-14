@@ -20,7 +20,6 @@ func getStores() async {
         if let data = data {
             if let result = try? JSONDecoder().decode([Store].self, from: data) {
                 stores.stores = result
-                //print(stores)
             } else {
                 print("Invalid Response")
             }
@@ -31,12 +30,6 @@ func getStores() async {
     
     task.resume()
 }
-
-//func getStoreById(storeId: Int) -> Store {
-//    let store: Store = stores.stores?[Int(storeId)+=1]
-//
-//    return store
-//}
 
 func getStoreById(storeID: String) -> Store {
     let store: Store = (stores.stores?.filter{($0.storeID ?? "0") == storeID}.first)!

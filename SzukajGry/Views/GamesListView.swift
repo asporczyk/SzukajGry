@@ -21,7 +21,7 @@ struct GamesListView: View {
       }
     
     func search(for term: String) async -> [Game] {
-        // build the request
+        isSearching = true
         let request = buildURLRequest(for: term)
         
         do {
@@ -29,9 +29,8 @@ struct GamesListView: View {
           guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
               return Result.empty.games!
           }
-            print(data)
             let result = try JSONDecoder().decode([Game].self, from: data)
-            print(result)
+            isSearching = false
             return result
         }
         catch {
@@ -42,7 +41,7 @@ struct GamesListView: View {
     var body: some View {
         ZStack {
             if isSearching {
-                ProgressView("Fetching...")
+                ProgressView()
             } else {
                 
                 List (games, id: \.dealID){ game in
@@ -60,17 +59,18 @@ struct GamesListView: View {
             
             for i in 0..<games.count {
                 self.games[i].store = getStoreById(storeID: games[i].storeID!)
-                print(games[i].store)
             }
-            
-            print(games.first)
         }
         .refreshable {
+            let result = await search(for: title)
+            games = result
             
+            for i in 0..<games.count {
+                self.games[i].store = getStoreById(storeID: games[i].storeID!)
+            }
         }
         .navigationTitle("Wyniki wyszukiwania")
     }
-        
 }
 
 struct GamesListView_Previews: PreviewProvider {
